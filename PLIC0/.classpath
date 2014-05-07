@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="/Users/mac/Desktop/Compilation/java_cup.jar"/>
-	<classpathentry kind="lib" path="/Users/mac/Desktop/Compilation/JFlex.jar"/>
+	<classpathentry kind="lib" path="/home/thomas/Desktop/Compil/java-cup-11a.jar"/>
+	<classpathentry kind="lib" path="/home/thomas/Desktop/Compil/JFlex.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
