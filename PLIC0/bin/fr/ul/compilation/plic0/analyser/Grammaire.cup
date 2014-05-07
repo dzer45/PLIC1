@@ -1,0 +1,106 @@
+package fr.ul.compilation.plic0.analyser ;
+
+import java_cup.runtime.*;
+import fr.ul.compilation.plic0.*;
+
+action code {: 
+       	      	Expression arb = null;  
+	    :} ;
+
+parser code {:
+    
+    public void report_error(String message, Object info) {
+
+        StringBuffer m = new StringBuffer("Error");
+        if (info instanceof java_cup.runtime.Symbol) {
+
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            if (s.left >= 0) {                
+                m.append(" in line "+(s.left+1));   
+                if (s.right >= 0)                    
+                    m.append(", column "+(s.right+1));
+            }
+        }
+   
+        m.append(" : "+message);
+   
+        System.err.println(m);
+    }
+
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+:};
+   
+
+terminal Expression MOINS, PLUS, MULTIPLICATION, PARO, PARF, INFERIEUR, EGAL, SUPERIEUR, DIFFERENT;
+terminal String ENTIER;
+
+non terminal Expression OPER, EXPR, EXPR_BOOL, BOOL;
+non terminal Expression PROG ;
+
+precedence left INFERIEUR,EGAL,SUPERIEUR,DIFFERENT;
+precedence left PLUS, MOINS;
+precedence left MULTIPLICATION;
+
+start with PROG ;
+
+PROG	::=  SYSTEME ;
+System ::= Classe;
+Classe ::= 
+
+
+
+
+
+
+	EXPR_BOOL:e
+		{: RESULT = e; :}
+		| EXPR:e
+		{: RESULT = e; :}
+		;
+		
+						 		   
+EXPR	::=	EXPR:e1 OPER:p  EXPR:e2
+		{: p.ajouterGauche(e1);
+		   p.ajouterDroit(e2);
+		   RESULT = p;
+	 	:}
+		|PARO EXPR:e PARF
+		{:
+		   RESULT = e;
+	 	:}
+		|MOINS EXPR:e
+		{:
+		   	RESULT = new Soustraction(new Entier(0), e) ;
+	 	:}
+		|ENTIER:i
+		{:	RESULT = new Entier(Integer.parseInt(i)); :}
+		;
+
+EXPR_BOOL ::= EXPR:e1 BOOL:b EXPR:e2
+		{: 	b.ajouterGauche(e1);
+	   		b.ajouterDroit(e2);
+	   		RESULT = b;
+	   	:}
+;
+BOOL	::= INFERIEUR
+		{:RESULT = new Inferieur(); :}
+		| EGAL
+		{:RESULT = new Egal(); :}
+		| SUPERIEUR
+		{:RESULT = new Superieur(); :}
+		|DIFFERENT
+		{:RESULT = new Inegalite(); :}
+		;
+
+
+OPER	::=	MOINS
+		{:RESULT = new Soustraction() ; :}
+		| PLUS
+		{:RESULT =new Somme() ; :}
+		| MULTIPLICATION
+		{:RESULT = new Multiplication() ; :}
+		;
+
