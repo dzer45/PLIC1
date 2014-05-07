@@ -66,7 +66,7 @@ EXPR	::=	EXPR:e1 MOINS EXPR:e2
 	 	:}
 		| MOINS EXPR:e
 		{:
-		   	RESULT = new Entier(new Entier(0), e) ;
+		   	RESULT = new Soustraction(new Entier(0), e) ;
 	 	:}
 	 	%prec UMOINS
 		| ENTIER:i
@@ -79,7 +79,12 @@ EXPR	::=	EXPR:e1 MOINS EXPR:e2
 	 	:}
 		;
 
-EXPR_BOOL ::= EXPR:e1 BOOL:b EXPR:e2
+EXPR_BOOL ::= EXPR_BOOL:e1 BOOL:b EXPR_BOOL:e2
+		{: 	b.ajouterGauche(e1);
+	   		b.ajouterDroit(e2);
+	   		RESULT = b;
+	   	:}
+		| EXPR:e1 BOOL:b EXPR:e2
 		{: 	b.ajouterGauche(e1);
 	   		b.ajouterDroit(e2);
 	   		RESULT = b;
