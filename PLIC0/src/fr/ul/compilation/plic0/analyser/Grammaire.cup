@@ -35,7 +35,7 @@ parser code {:
    
 
 terminal UMOINS, MOINS, PLUS, MULTIPLICATION, PARO, PARF, INFERIEUR, EGAL, SUPERIEUR, DIFFERENT;
-terminal Integer ENTIER;
+terminal String ENTIER;
 
 non terminal Expression EXPR, EXPR_BOOL, BOOL, PROG;
 
@@ -71,7 +71,7 @@ EXPR	::=	EXPR:e1 MOINS EXPR:e2
 	 	%prec UMOINS
 		| ENTIER:i
 		{:	
-			RESULT = new Entier(i); 
+			RESULT = new Entier(Integer.parseInt(i)); 
 		:}
 		| PARO EXPR:e PARF
 		{:

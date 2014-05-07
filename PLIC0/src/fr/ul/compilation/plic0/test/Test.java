@@ -28,17 +28,17 @@ public class Test {
 	public static Expression affichageLexique(String chemin)   {
 		Expression exp = null;
 		
-			FileReader fichierR;
-			try {
-				fichierR = new FileReader(chemin);
-				AnalyseurLexical analyseurL = new AnalyseurLexical(fichierR);
-				AnalyseurSyntaxique analyseurS = new AnalyseurSyntaxique(analyseurL);
-				exp = (Expression) analyseurS.parse().value;
-			} catch (FileNotFoundException e) {
-				
-			} catch (Exception e) {
-				
-			}
+		FileReader fichierR;
+		try {
+			fichierR = new FileReader(chemin);
+			AnalyseurLexical analyseurL = new AnalyseurLexical(fichierR);
+			AnalyseurSyntaxique analyseurS = new AnalyseurSyntaxique(analyseurL);
+			exp = (Expression) analyseurS.parse().value;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		System.out.println(exp);	
 		
