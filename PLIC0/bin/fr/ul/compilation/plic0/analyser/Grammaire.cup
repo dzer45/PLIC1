@@ -34,15 +34,14 @@ parser code {:
 :};
    
 
-terminal Expression MOINS, PLUS, MULTIPLICATION, PARO, PARF, INFERIEUR, EGAL, SUPERIEUR, DIFFERENT;
-terminal String ENTIER;
+terminal UMOINS, MOINS, PLUS, MULTIPLICATION, PARO, PARF, INFERIEUR, EGAL, SUPERIEUR, DIFFERENT;
+terminal Integer ENTIER;
 
-non terminal Expression OPER, EXPR, EXPR_BOOL, BOOL;
-non terminal Expression PROG ;
+non terminal Expression EXPR, EXPR_BOOL, BOOL, PROG;
 
-precedence left INFERIEUR,EGAL,SUPERIEUR,DIFFERENT;
-precedence left PLUS, MOINS;
+precedence left INFERIEUR, EGAL, SUPERIEUR, DIFFERENT, PLUS, MOINS;
 precedence left MULTIPLICATION;
+precedence left UMOINS;
 
 start with PROG ;
 
@@ -53,21 +52,31 @@ PROG	::= EXPR_BOOL:e
 		;
 		
 						 		   
-EXPR	::=	EXPR:e1 OPER:p  EXPR:e2
-		{: p.ajouterGauche(e1);
-		   p.ajouterDroit(e2);
-		   RESULT = p;
+EXPR	::=	EXPR:e1 MOINS EXPR:e2
+		{: 
+		   	RESULT = new Soustraction(e1, e2);
 	 	:}
-		|PARO EXPR:e PARF
-		{:
-		   RESULT = e;
+	 	| EXPR:e1 PLUS EXPR:e2
+		{: 
+		   	RESULT = new Somme(e1, e2);
 	 	:}
-		|MOINS EXPR:e
+	 	| EXPR:e1 MULTIPLICATION EXPR:e2
+		{: 
+		  	RESULT = new Multiplication(e1, e2);
+	 	:}
+		| MOINS EXPR:e
 		{:
 		   	RESULT = new Soustraction(new Entier(0), e) ;
 	 	:}
-		|ENTIER:i
-		{:	RESULT = new Entier(Integer.parseInt(i)); :}
+	 	%prec UMOINS
+		| ENTIER:i
+		{:	
+			RESULT = new Entier(i); 
+		:}
+		| PARO EXPR:e PARF
+		{:
+		   	RESULT = e;
+	 	:}
 		;
 
 EXPR_BOOL ::= EXPR:e1 BOOL:b EXPR:e2
@@ -85,13 +94,3 @@ BOOL	::= INFERIEUR
 		|DIFFERENT
 		{:RESULT = new Inegalite(); :}
 		;
-
-
-OPER	::=	MOINS
-		{:RESULT = new Soustraction() ; :}
-		| PLUS
-		{:RESULT =new Somme() ; :}
-		| MULTIPLICATION
-		{:RESULT = new Multiplication() ; :}
-		;
-
