@@ -46,16 +46,7 @@ precedence left MULTIPLICATION;
 
 start with PROG ;
 
-PROG	::=  SYSTEME ;
-System ::= Classe;
-Classe ::= 
-
-
-
-
-
-
-	EXPR_BOOL:e
+PROG	::= EXPR_BOOL:e
 		{: RESULT = e; :}
 		| EXPR:e
 		{: RESULT = e; :}

@@ -1,0 +1,3 @@
+java -cp ~/Desktop/JFlex.jar JFlex.Main AnalyseurLexical.jflex
+
+java -cp ~/Desktop/java-cup-11a.jar java_cup.Main -parser AnalyseurSyntaxique -symbols CodesLexicaux Grammaire.cup
