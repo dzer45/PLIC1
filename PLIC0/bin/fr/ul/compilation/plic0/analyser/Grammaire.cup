@@ -66,7 +66,7 @@ EXPR	::=	EXPR:e1 MOINS EXPR:e2
 	 	:}
 		| MOINS EXPR:e
 		{:
-		   	RESULT = new Soustraction(new Entier(0), e) ;
+		   	RESULT = new Entier(new Entier(0), e) ;
 	 	:}
 	 	%prec UMOINS
 		| ENTIER:i

@@ -26,7 +26,7 @@ public class Multiplication extends Binaire {
 				"#Depiler dans $t8\n"+
 				"		add $sp, $sp, 4\n"+
 				"		lw $t8,($sp) \n"+
-				"#Multiplier  $t8 ˆ v0 \n"+
+				"#Multiplier  $t8 ï¿½ v0 \n"+
 				"		mul $v0,$t8,$v0\n";
 				
 	}
