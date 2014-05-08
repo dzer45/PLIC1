@@ -12,12 +12,6 @@ public class Egal extends Binaire{
 	}
 
 	@Override
-	public String operateur() {
-		// TODO Auto-generated method stub
-		return "==";
-	}
-
-	@Override
 	public String generer() {
 		Expression.COMPTEUR_GENEREATION++;
 		return opg.generer()+
@@ -37,6 +31,8 @@ public class Egal extends Binaire{
 				"eqend" + Expression.COMPTEUR_GENEREATION + ":\n";
 	}
 
-
-
+	@Override
+	public String toString() {
+		return "(" + this.opg.toString() + "==" + this.opd.toString() + ")";
+	}
 }

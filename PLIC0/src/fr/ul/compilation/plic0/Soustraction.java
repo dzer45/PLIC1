@@ -1,21 +1,15 @@
 package fr.ul.compilation.plic0;
 
 public class Soustraction extends Binaire {
-	public Soustraction(Expression opg, Expression opd) {
-		super(opg, opd);
+	public Soustraction(Expression e1, Expression opd) {
+		super(e1, opd);
 
 	}
 
 	public Soustraction() {
 		// TODO Auto-generated constructor stub
 	}
-
-	@Override
-	public String operateur() {
-		// TODO Auto-generated method stub
-		return "-";
-	}
-
+	
 	@Override
 	public String generer() {
 		// TODO Auto-generated method stub
@@ -27,9 +21,14 @@ public class Soustraction extends Binaire {
 				"#Depiler dans $t8\n"+
 				"		add $sp, $sp, 4\n"+
 				"		lw $t8,($sp) \n"+
-				"#Soustraction  $t8 ˆ v0 \n"+
+				"#Soustraction  $t8 ï¿½ v0 \n"+
 				"		sub $v0, $t8, $v0\n";
 
 	}
 
+
+	@Override
+	public String toString() {
+		return "(" + this.opg.toString() + "-" + this.opd.toString() + ")";
+	}
 }

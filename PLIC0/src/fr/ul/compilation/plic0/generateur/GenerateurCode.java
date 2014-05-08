@@ -3,7 +3,7 @@ package fr.ul.compilation.plic0.generateur;
 import java.io.*;
 
 /**
- * CrŽer le fichier Mips
+ * Crï¿½er le fichier Mips
  * @author 
  */
 public class GenerateurCode {
@@ -32,7 +32,7 @@ public class GenerateurCode {
      */
     public void printFichier(String expr) {
     	 try {
-				flot = new FileWriter(home+"/fichier.txt");
+				flot = new FileWriter(home+"/fichier.asm");
 				flotFiltre = new PrintWriter( new BufferedWriter(flot));
 				/*flotFiltre.print("//Reservation de la place pour la pile\n\n"
          		+"pile				equ			r15\n"

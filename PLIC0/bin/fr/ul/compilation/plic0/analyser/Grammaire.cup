@@ -1,10 +1,12 @@
 package fr.ul.compilation.plic0.analyser ;
 
 import java_cup.runtime.*;
+import java.util.LinkedList;
 import fr.ul.compilation.plic0.*;
 
 action code {: 
        	      	Expression arb = null;  
+       	      	LinkedList<Expression> liste = new LinkedList<Expression>();
 	    :} ;
 
 parser code {:
@@ -35,22 +37,89 @@ parser code {:
    
 
 terminal UMOINS, MOINS, PLUS, MULTIPLICATION, PARO, PARF, INFERIEUR, EGAL, SUPERIEUR, DIFFERENT;
-terminal String ENTIER;
+terminal SEMI, ECRIRE, LIRE, EGAL_AFFECT, TYPE, FIN_CLASSE, CLASSE;
+terminal String ENTIER, IDF, CHAINE, IDF_MUL, STATUT;
 
-non terminal Expression EXPR, EXPR_BOOL, BOOL, PROG;
+non terminal LinkedList<Expression> SYSTEME;
+non terminal Expression EXPR, EXPR_LIST;
+non terminal Expression ECRIRE_FCT, LIRE_FCT, ACCES, AFFECT, INST, DECL_CONST, DECL_CHAMP, DECLARATION, CLASSE_FCT;
+non terminal Binaire BOOL, EXPR_BOOL;
 
 precedence left INFERIEUR, EGAL, SUPERIEUR, DIFFERENT, PLUS, MOINS;
 precedence left MULTIPLICATION;
 precedence left UMOINS;
 
-start with PROG ;
+start with SYSTEME;
 
-PROG	::= EXPR_BOOL:e
+SYSTEME	::= CLASSE_FCT
+		{:
+			RESULT = liste;
+		:}
+		;
+		
+CLASSE_FCT::= CLASSE IDF DECLARATION FIN_CLASSE;
+		
+DECLARATION::= DECL_CHAMP
+		| DECL_CONST
+		| DECL_CONST DECLARATION
+		| DECL_CHAMP DECLARATION;
+		
+DECL_CHAMP::= STATUT:s TYPE IDF_MUL:e SEMI
+		{:
+			for(String str : e.split(",")) {
+				liste.add(new Variable(s, str.replace(" ", "")));
+			}
+		:};
+		
+DECL_CONST::= INST:e
+		{:
+			liste.add(e);
+		:}
+		;
+		
+INST	::= ECRIRE_FCT:e
+		{:
+			RESULT = e;
+		:}
+		| LIRE_FCT:e
+		{:
+			RESULT = e;
+		:}
+		| AFFECT:e
+		{:
+			RESULT = e;
+		:};
+		
+AFFECT 	::= ACCES:e1 EGAL_AFFECT EXPR_LIST:e2 SEMI
+		{:
+			RESULT = new Affection(e1, e2);
+		:};
+		
+ACCES 	::= IDF:id
+		{:
+			RESULT = new Variable("publique", id); 
+		:};
+		
+LIRE_FCT ::= LIRE IDF:id SEMI
+		{:
+			RESULT = new Lire(id);
+		:};
+
+ECRIRE_FCT::= ECRIRE EXPR_LIST:e SEMI
+		{:
+			RESULT = new Ecrire(e);
+		:}
+		| ECRIRE CHAINE:ch SEMI
+		{:
+			RESULT = new Ecrire(new Chaine(ch));
+		:}
+		;
+
+EXPR_LIST::= EXPR_BOOL:e
 		{: RESULT = e; :}
 		| EXPR:e
 		{: RESULT = e; :}
 		;
-		
 						 		   
 EXPR	::=	EXPR:e1 MOINS EXPR:e2
 		{: 
@@ -77,6 +146,10 @@ EXPR	::=	EXPR:e1 MOINS EXPR:e2
 		{:
 		   	RESULT = e;
 	 	:}
+	 	| IDF:id
+	 	{:
+	 		RESULT = new Variable("publique", id);
+	 	:}
 		;
 
 EXPR_BOOL ::= EXPR_BOOL:e1 BOOL:b EXPR_BOOL:e2
@@ -93,7 +166,8 @@ EXPR_BOOL ::= EXPR_BOOL:e1 BOOL:b EXPR_BOOL:e2
 	   		b.ajouterDroit(e2);
 	   		RESULT = b;
 	   	:}
-;
+		;
+
 BOOL	::= INFERIEUR
 		{:RESULT = new Inferieur(); :}
 		| EGAL

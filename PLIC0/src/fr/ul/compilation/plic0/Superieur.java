@@ -8,13 +8,7 @@ public class Superieur extends Binaire{
 
 	public Superieur() {
 	}
-
-	@Override
-	public String operateur() {
-		// TODO Auto-generated method stub
-		return ">";
-	}
-
+	
 	@Override
 	public String generer() {
 		Expression.COMPTEUR_GENEREATION++;
@@ -36,5 +30,8 @@ public class Superieur extends Binaire{
 	}
 
 
-
+	@Override
+	public String toString() {
+		return "(" + this.opg.toString() + ">" + this.opd.toString() + ")";
+	}
 }

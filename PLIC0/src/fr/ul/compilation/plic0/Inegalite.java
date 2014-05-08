@@ -10,13 +10,7 @@ public class Inegalite extends Binaire{
 	public Inegalite() {
 		// TODO Auto-generated constructor stub
 	}
-
-	@Override
-	public String operateur() {
-		// TODO Auto-generated method stub
-		return "!=";
-	}
-
+	
 	@Override
 	public String generer() {
 		Expression.COMPTEUR_GENEREATION++;
@@ -38,4 +32,8 @@ public class Inegalite extends Binaire{
 	}
 
 
+	@Override
+	public String toString() {
+		return "(" + this.opg.toString() + "!=" + this.opd.toString() + ")";
+	}
 }
