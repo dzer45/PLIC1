@@ -84,6 +84,10 @@ EXPR_BOOL ::= EXPR_BOOL:e1 BOOL:b EXPR_BOOL:e2
 	   		b.ajouterDroit(e2);
 	   		RESULT = b;
 	   	:}
+	   	| PARO EXPR_BOOL:e PARF
+		{:
+		   	RESULT = e;
+	 	:}
 		| EXPR:e1 BOOL:b EXPR:e2
 		{: 	b.ajouterGauche(e1);
 	   		b.ajouterDroit(e2);

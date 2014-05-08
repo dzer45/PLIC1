@@ -1,9 +1,8 @@
 package fr.ul.compilation.plic0;
 
 public abstract class Expression {
+	public static int COMPTEUR_GENEREATION = 0;
 	
-	public static int NB_OPERANDE = 0;
-
 	public abstract int NbOperateurs();
 
 	public abstract int NbOperandes();

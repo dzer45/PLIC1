@@ -19,7 +19,7 @@ public class Egal extends Binaire{
 
 	@Override
 	public String generer() {
-		// TODO Auto-generated method stub;
+		Expression.COMPTEUR_GENEREATION++;
 		return opg.generer()+
 				"#Empiler v0 \n"+
 				"		sw $v0,0($sp)\n"+
@@ -29,9 +29,12 @@ public class Egal extends Binaire{
 				"		add $sp, $sp, 4\n"+
 				"		lw $t8,($sp) \n"+
 				"#Calculer opg==opd $t8 \n"+
-				"		sub $v0,$t8,$v0\n"+
-				"		beq $t8, aller \n"+
-				"aller:";
+				"		bne $t8, $v0, eqfalse" + Expression.COMPTEUR_GENEREATION + "\n"+
+				"		li $v0, 1\n" +
+				"		b eqend" + Expression.COMPTEUR_GENEREATION + "\n" +
+				"eqfalse" + Expression.COMPTEUR_GENEREATION + ":\n" +
+				"		li $v0, 0\n" +
+				"eqend" + Expression.COMPTEUR_GENEREATION + ":\n";
 	}
 
 

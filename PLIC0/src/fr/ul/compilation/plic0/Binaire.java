@@ -4,13 +4,11 @@ public abstract class Binaire extends Expression {
 	protected Expression opg, opd;
 	
 	public Binaire(){
-		
 	}
 	
 	public Binaire(Expression g, Expression d) {
 		this.opg = g;
 		this.opd = d;
-		Expression.NB_OPERANDE++;
 	}
 	public Expression gauche(){
 		return opg;

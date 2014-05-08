@@ -19,7 +19,7 @@ public class Inferieur extends Binaire{
 
 	@Override
 	public String generer() {
-		// TODO Auto-generated method stub
+		Expression.COMPTEUR_GENEREATION++;
 		return opg.generer()+
 				"#Empiler v0 \n"+
 				"		sw $v0,0($sp)\n"+
@@ -29,9 +29,12 @@ public class Inferieur extends Binaire{
 				"		add $sp, $sp, 4\n"+
 				"		lw $t8,($sp) \n"+
 				"#Calculer opg<opd $t8 \n"+
-				"		sub $v0,$t8,$v0\n"+
-				"		bgtz $t8, aller \n"+
-				"aller:";
+				"		bge $t8, $v0, inffalse" + Expression.COMPTEUR_GENEREATION + "\n"+
+				"		li $v0, 1\n" +
+				"		b infend" + Expression.COMPTEUR_GENEREATION + "\n" +
+				"inffalse" + Expression.COMPTEUR_GENEREATION + ":\n" +
+				"		li $v0, 0\n" +
+				"infend" + Expression.COMPTEUR_GENEREATION + ":\n";
 	}
 
 
