@@ -1,0 +1,209 @@
+package fr.ul.compilation.plic1.analyser ;
+
+import java_cup.runtime.*;
+import java.util.LinkedList;
+import fr.ul.compilation.plic1.*;
+import fr.ul.compilation.plic1.expression.*;
+import fr.ul.compilation.plic1.instruction.*;
+import fr.ul.compilation.plic1.generateur.*;
+
+action code {: 
+				
+       	      	Bloc bloc = new Bloc();
+	    :} ;
+
+parser code {:
+    
+    public void report_error(String message, Object info) {
+
+        StringBuffer m = new StringBuffer("Error");
+        if (info instanceof java_cup.runtime.Symbol) {
+
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+            if (s.left >= 0) {                
+                m.append(" in line "+(s.left+1));   
+                if (s.right >= 0)                    
+                    m.append(", column "+(s.right+1));
+            }
+        }
+   
+        m.append(" : "+message);
+   
+        System.err.println(m);
+    }
+
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+:};
+   
+
+terminal UMOINS, MOINS, PLUS, MULTIPLICATION, PARO, PARF, INFERIEUR, EGAL, SUPERIEUR, DIFFERENT;
+terminal SEMI, ECRIRE, LIRE, EGAL_AFFECT, FIN_CLASSE, CLASSE;
+terminal String ENTIER, IDF, CHAINE, IDF_MUL, STATUT, TYPE;
+
+non terminal Classe SYSTEME;
+non terminal Bloc CLASSE_FCT;
+non terminal Expression EXPR, EXPR_LIST;
+non terminal Instruction ECRIRE_FCT, LIRE_FCT, AFFECT, INST, DECL_CONST, DECL_CHAMP, DECLARATION;
+non terminal Idf ACCES;
+non terminal Binaire BOOL, EXPR_BOOL;
+
+precedence left INFERIEUR, EGAL, SUPERIEUR, DIFFERENT, PLUS, MOINS;
+precedence left MULTIPLICATION;
+precedence left UMOINS;
+
+start with SYSTEME;
+
+SYSTEME	::= CLASSE_FCT:bloc
+		{:
+			
+			RESULT = new Classe(bloc);
+		:}
+		;
+		
+CLASSE_FCT::= CLASSE 
+		{:
+			TDS.getInstance().entreeBloc();
+		:}
+		IDF:i DECLARATION 
+		
+		{:
+			RESULT = bloc;
+		:}
+		FIN_CLASSE
+		{:
+			TDS.getInstance().sortieBloc();
+		:}
+		;
+
+DECLARATION::= DECL_CHAMP
+		| DECL_CONST
+		| DECL_CONST DECLARATION
+		| DECL_CHAMP DECLARATION;
+		
+DECL_CHAMP::= STATUT:s TYPE:t IDF_MUL:e SEMI
+		{:
+			for(String str : e.split(",")) {
+				//EntreeVariable ev = new EntreeVariable(new Idf(str.replace(" ", "")));
+				SymboleVariable sv = new SymboleVariable(sleft+1, new TypeEntier(), s);
+				TDS.getInstance().ajouter(str.replace(" ", ""), sv);
+				bloc.addArbreAbstrait(new Idf(str.replace(" ", "")));
+			}
+		:};
+		
+DECL_CONST::= INST:e
+		{:
+			bloc.addArbreAbstrait(e);
+		:}
+		;
+		
+INST	::= ECRIRE_FCT:e
+		{:
+			RESULT = e;
+		:}
+		| LIRE_FCT:e
+		{:
+			RESULT = e;
+		:}
+		| AFFECT:e
+		{:
+			RESULT = e;
+		:};
+		
+AFFECT 	::= ACCES:e1 EGAL_AFFECT EXPR_LIST:e2 SEMI
+		{:
+			RESULT = new Affection(e1, e2);
+		:};
+		
+ACCES 	::= IDF:id
+		{:
+			//EntreeVariable ev = new EntreeVariable(new Idf(id));
+			SymboleVariable sv = new SymboleVariable(idleft+1, new TypeEntier(), null);
+			TDS.getInstance().ajouter(id, sv);
+			RESULT = new Idf( id); 
+		:};
+		
+LIRE_FCT ::= LIRE IDF:id SEMI
+		{:
+			RESULT = new Lire(id);
+		:};
+
+ECRIRE_FCT::= ECRIRE EXPR_LIST:e SEMI
+		{:
+			RESULT = new Ecrire(e);
+		:}
+		| ECRIRE CHAINE:ch SEMI
+		{:
+			RESULT = new Ecrire(new Chaine(ch));
+		:}
+		;
+
+EXPR_LIST::= EXPR_BOOL:e
+		{: RESULT = e; :}
+		| EXPR:e
+		{: RESULT = e; :}
+		;
+						 		   
+EXPR	::=	EXPR:e1 MOINS EXPR:e2
+		{: 
+		   	RESULT = new Soustraction(e1, e2);
+	 	:}
+	 	| EXPR:e1 PLUS EXPR:e2
+		{: 
+		   	RESULT = new Somme(e1, e2);
+	 	:}
+	 	| EXPR:e1 MULTIPLICATION EXPR:e2
+		{: 
+		  	RESULT = new Multiplication(e1, e2);
+	 	:}
+		| MOINS EXPR:e
+		{:
+		   	RESULT = new Soustraction(new Entier(0), e) ;
+	 	:}
+	 	%prec UMOINS
+		| ENTIER:i
+		{:	
+			RESULT = new Entier(Integer.parseInt(i)); 
+		:}
+		| PARO EXPR:e PARF
+		{:
+		   	RESULT = e;
+	 	:}
+	 	| IDF:id
+	 	{:
+	 				
+	 		//EntreeVariable ev = new EntreeVariable(new Idf(id));
+			SymboleVariable sv = new SymboleVariable(idleft+1, new TypeEntier(), null);
+			TDS.getInstance().ajouter(id, sv);
+			RESULT = new Idf( id);
+	 	:}
+		;
+
+EXPR_BOOL ::= EXPR_BOOL:e1 BOOL:b EXPR_BOOL:e2
+		{: 	b.ajouterGauche(e1);
+	   		b.ajouterDroit(e2);
+	   		RESULT = b;
+	   	:}
+	   	| PARO EXPR_BOOL:e PARF
+		{:
+		   	RESULT = e;
+	 	:}
+		| EXPR:e1 BOOL:b EXPR:e2
+		{: 	b.ajouterGauche(e1);
+	   		b.ajouterDroit(e2);
+	   		RESULT = b;
+	   	:}
+		;
+
+BOOL	::= INFERIEUR
+		{:RESULT = new Inferieur(); :}
+		| EGAL
+		{:RESULT = new Egal(); :}
+		| SUPERIEUR
+		{:RESULT = new Superieur(); :}
+		|DIFFERENT
+		{:RESULT = new Inegalite(); :}
+		;
+	
