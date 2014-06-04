@@ -1,23 +1,34 @@
-classe Essai
-	// La seule et unique classe de Plic1
-	b = a + 25 ;
-	publique entier a, b ;
-	a = 0;
-	privee entier c1, d2, de ;
-	privee entier A, unNomDidentificateurTresLongPourEmbeterLesCompilateursDuLangagePlic1 ;
-	ecrire "programme de test\n" ;
-	ecrire "\n\n" ;
-	ecrire a ; ecrire "\n" ;
-	// je calcule des // "expressions"
-	A = 0012 ; A = + 0000012 + A ;
-	c1 = (a+10) * 12 * (-1) ; f = 5 ;
-	d2 = (a*3 - 3 + c1*f) ;
-	unNomDidentificateurTresLongPourEmbeterLesCompilateursDuLangagePlic = c1 ;
-	ecrire unNomDidentificateurTresLongPourEmbeterLesCompilateursDuLangagePlic ; ecrire "\n" ;
-	ecrire "ecriture dâ€™un mot entre guillemets ""bonjour""" ;
-	ecrire "\n" ;lire f ; lire Essai ;
-	publique entier f ;
-	Essai = 1 ;
-	publique entier Essai, essai ;
-	essai = 2*Essai ; 
+// Test de declarations
+ classe Essai1
+// Declarations de champs 
+publique entier x , y ;
+publique entier a ;
+// Declarations de constructeurs 
+publique Essai1(entier x , entier a)
+	debut
+		x=a;
+	fin
+publique Essai1(entier x)
+	debut
+		y = x+a  ;
+	fin
+// Declaration dÕune fonction 
+publique entier f (entier a)
+	debut
+		entier x, a ;
+		x=a+b;
+		retourne (x); 
+	fin
+fin
+classe Test
+publique entier a ;
+publique Test(entier y)
+	debut
+		x=a+y;
+	fin
+publique entier x , y ;
+publique Test() 
+	debut
+		y = x+a ; 
+	fin
 fin

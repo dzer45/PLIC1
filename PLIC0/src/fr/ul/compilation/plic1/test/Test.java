@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 import fr.ul.compilation.plic1.Classe;
+import fr.ul.compilation.plic1.Systeme;
 import fr.ul.compilation.plic1.analyser.AnalyseurLexical;
 import fr.ul.compilation.plic1.analyser.AnalyseurSyntaxique;
 import fr.ul.compilation.plic1.exception.AnalyseLexicalException;
@@ -19,16 +20,16 @@ public class Test {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		if (args.length == 1) {
-			Classe classe;
-			classe = affichageLexique(args[0]);
-			System.out.println(TDS.getInstance().toString());
-			try {
-				classe.verifier();
+			Systeme syst;
+			syst= affichageLexique(args[0]);
+			System.out.println(syst.toString());
+			/*try {
+				syst.verifier();
 			} catch (AnalyseurSemantiqueException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			GenerateurCode.getInstance().printFichier(classe.generer());
+			}*/
+			GenerateurCode.getInstance().printFichier(syst.generer());
 
 		} else {
 			System.out.println("<fichierSource.plic>");
@@ -36,15 +37,15 @@ public class Test {
 
 	}
 
-	public static Classe affichageLexique(String chemin) {
-		Classe classe = null;
+	public static Systeme affichageLexique(String chemin) {
+		Systeme sys = null;
 
 		FileReader fichierR;
 		try {
 			fichierR = new FileReader(chemin);
 			AnalyseurLexical analyseurL = new AnalyseurLexical(fichierR);
 			AnalyseurSyntaxique analyseurS = new AnalyseurSyntaxique(analyseurL);
-			classe = (Classe) analyseurS.parse().value;
+			sys = (Systeme) analyseurS.parse().value;
 		} catch (AnalyseLexicalException e) {
 			System.out.println(e);
 		} catch (FileNotFoundException e) {
@@ -55,7 +56,7 @@ public class Test {
 
 		// System.out.println(classe.toString());
 
-		return classe;
+		return sys;
 	}
 
 }

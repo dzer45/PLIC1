@@ -1,7 +1,12 @@
 package fr.ul.compilation.plic1.expression;
 
+import java.util.Map.Entry;
+
 import fr.ul.compilation.plic1.exception.AnalyseurSemantiqueException;
+import fr.ul.compilation.plic1.generateur.Entree;
 import fr.ul.compilation.plic1.generateur.EntreeVariable;
+import fr.ul.compilation.plic1.generateur.Symbole;
+import fr.ul.compilation.plic1.generateur.SymboleVariable;
 import fr.ul.compilation.plic1.generateur.TDS;
 
 public class Idf extends Zeroaire{
@@ -27,13 +32,19 @@ public class Idf extends Zeroaire{
 	 */
 	@Override
 	public boolean verifier() throws AnalyseurSemantiqueException {
-		
-		if(TDS.getInstance().identifier(identifier) == null) {
-			
-			throw new AnalyseurSemantiqueException("Variable non déclarée : " + this.identifier+" ligne "+TDS.getInstance().getListe().get(0).get(identifier).ligne());
-		}else{
-			
-			return true;
+		for(Entry<Entree, Symbole> entry : TDS.getInstance().getListe().get(0).entrySet()) {
+			if(entry.getKey().idf().identifier.equals(this.identifier)) {
+				SymboleVariable s = (SymboleVariable) TDS.getInstance().getListe().get(0).get(entry.getKey());
+				if(s.getStatut() == null) {
+					throw new AnalyseurSemantiqueException("Variable non déclarée : " + this.identifier);	
+				}
+			}
 		}
+		return true;
+	
+	}
+	
+	public String getIdentifier() {
+		return this.identifier;
 	}
 }

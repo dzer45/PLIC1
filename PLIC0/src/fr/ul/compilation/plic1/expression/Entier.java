@@ -4,7 +4,7 @@ import fr.ul.compilation.plic1.generateur.TypeEntier;
 
 
 public class Entier extends Zeroaire {
-	private  int val;
+	private int val;
 
 	public Entier( int val ) {
 		this.val = val ;
@@ -21,7 +21,6 @@ public class Entier extends Zeroaire {
 
 	@Override
 	public String generer() {
-		// TODO Auto-generated method stub
 		return "#Ranger "+val+" dans v0\n"+
 		" 		li $v0,"+val+"  \n" ;
 
